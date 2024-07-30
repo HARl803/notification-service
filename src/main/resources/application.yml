@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: notification-service
+  # MongoDB 설정
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/
+      database: haribo
+  # RabbitMQ 설정
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ssafy
+    password: ssafy
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      indent-output: true
+server:
+  port: 8082
+
+rabbitmq:
+  queue:
+    name: notificationQueue
+  exchange:
+    name: notificationExchange
+  routing:
+    key: notificationKey
+
