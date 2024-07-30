@@ -1,6 +1,7 @@
 package com.haribo.notification_service.presentation;
 
 import com.haribo.notification_service.application.dto.MessageDto;
+import com.haribo.notification_service.application.dto.MongoDto;
 import com.haribo.notification_service.application.service.NotificationService;
 import com.haribo.notification_service.presentation.response.NotificationResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -24,16 +25,22 @@ public class NotificationController {
      * 생산자(Producer)가 메시지를 전송합니다.
      */
     @PostMapping
-    public ResponseEntity<NotificationResponse<MessageDto>> sendMessage(@RequestBody MessageDto messageDto) {
-
+    public ResponseEntity<NotificationResponse<MongoDto>> sendMessage(@RequestBody MessageDto messageDto) {
         MessageDto result = notificationService.sendMessage(messageDto);
+        MongoDto dataSet = MongoDto.builder()
+                .userId(result.getUserId())
+                .message(result.getMessage())
+                .build();
+
         if (result != null) {
-            notificationService.saveMessage(result);
-            return ResponseEntity.ok(NotificationResponse.success(result));
+            notificationService.saveMessage(dataSet);
+            return ResponseEntity.ok(NotificationResponse.success(dataSet));
         } else {
             return ResponseEntity
-                    .status(NotificationResponse.error("Failed to send message", HttpStatus.INTERNAL_SERVER_ERROR).getStatusCode())
+                    .status(NotificationResponse.error("Failed to send message", HttpStatus.INTERNAL_SERVER_ERROR)
+                            .getStatusCode())
                     .body(NotificationResponse.error("Failed to send message", HttpStatus.INTERNAL_SERVER_ERROR));
+
         }
     }
 }
