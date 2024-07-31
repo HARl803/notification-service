@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haribo.notification_service.application.dto.MessageDto;
 import com.haribo.notification_service.application.dto.MongoDto;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 /**
  * ProducerService 구현체
  */
-@Slf4j
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
@@ -47,7 +45,7 @@ public class NotificationServiceImpl implements NotificationService {
         try {
             mongoTemplate.insert(mongoDto);
         } catch (Exception e) {
-            log.error("메시지 저장 실패", e);
+            System.out.println(e.getMessage());
         }
     }
 }
