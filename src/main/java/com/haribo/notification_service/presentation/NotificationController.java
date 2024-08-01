@@ -5,7 +5,6 @@ import com.haribo.notification_service.application.service.NotificationService;
 import com.haribo.notification_service.presentation.request.NotificationRequest;
 import com.haribo.notification_service.presentation.response.NotificationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
