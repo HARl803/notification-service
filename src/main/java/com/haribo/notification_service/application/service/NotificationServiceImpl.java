@@ -23,11 +23,16 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -46,27 +51,25 @@ public class NotificationServiceImpl implements NotificationService {
     private String PATH_TO_AUTH;
 
     @Override
-    public String authorizedProfileId() {
+    public LinkedHashMap<String, String> authorizedProfileId(String sessionId) throws URISyntaxException {
 
+        log.info("profileId 알아보기!: session check!");
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> authResult = restTemplate.getForEntity(PATH_TO_AUTH, String.class);
-        if(!authResult.getStatusCode().is2xxSuccessful()) throw new CustomException(CustomErrorCode.USER_NOT_FOUND);
 
-        JsonNode rootNode;
-        JsonNode profileMemberNode;
-        try {
-            rootNode = objectMapper.readTree(authResult.getBody());
-        } catch (Exception e) {
-            throw new CustomException(CustomErrorCode.READING_ROOT_NODE_FAILED);
-        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cookie", "JSESSIONID = " + sessionId);
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        ResponseEntity<?> responseEntity = restTemplate.exchange(new URI(PATH_TO_AUTH), HttpMethod.GET, entity, LinkedHashMap.class);
 
-        try {
-            profileMemberNode = rootNode.path("profileMember");
-        } catch (Exception e) {
-            throw new CustomException(CustomErrorCode.READING_PROFILE_MEMBER_NODE_FAILED);
-        }
+        LinkedHashMap<String, LinkedHashMap<String, String>> map =  (LinkedHashMap<String, LinkedHashMap<String, String>>) responseEntity.getBody();
 
-        return profileMemberNode.path("profileId").asText();
+        log.info("profileId: {}, nickName: {}", map.get("profileMember").get("profileId"), map.get("profileMember").get("nickName"));
+
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put("profileId", map.get("profileMember").get("profileId"));
+        response.put("nickName", map.get("profileMember").get("nickName"));
+
+        return response;
     }
 
     @Override

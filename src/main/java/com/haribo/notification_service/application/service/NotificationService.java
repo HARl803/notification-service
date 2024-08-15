@@ -4,11 +4,14 @@ import com.haribo.notification_service.presentation.request.NotificationRequest;
 import com.haribo.notification_service.presentation.response.NotificationResponseForCompterChat;
 import com.haribo.notification_service.presentation.response.NotificationResponseForEtc;
 
+import java.net.URISyntaxException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public interface NotificationService {
 
-    String authorizedProfileId();
+//    String authorizedProfileId();
+    LinkedHashMap<String, String> authorizedProfileId(String sessionId) throws URISyntaxException;
     List<NotificationResponseForEtc> getMessageListByReceiverFromMongodbForEtc(String receiver);
     List<NotificationResponseForCompterChat> getMessageListByReceiverFromMongodbForCompterChat(String receiver);
     void saveNotificationWithMatchingId(NotificationRequest request);

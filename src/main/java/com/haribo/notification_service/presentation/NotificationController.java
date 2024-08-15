@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URISyntaxException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Slf4j
@@ -26,20 +28,28 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping("/etc")
-    public ResponseEntity<List<NotificationResponseForEtc>> getMessageListByReceiverFromMongodbForEtc() {
+    public ResponseEntity<List<NotificationResponseForEtc>> getMessageListByReceiverFromMongodbForEtc(@CookieValue("JSESSIONID") String sessionId) throws URISyntaxException {
 
         log.info("신고.문의.게시글 댓글 알림 리스트 Get 컨트롤러 접근");
-        List<NotificationResponseForEtc> responseList = notificationService.getMessageListByReceiverFromMongodbForEtc(notificationService.authorizedProfileId());
+        log.info("auth 확인 접근");
+        LinkedHashMap<String, String> profile = notificationService.authorizedProfileId(sessionId);
+        String profileId = profile.get("profileId");
+
+        List<NotificationResponseForEtc> responseList = notificationService.getMessageListByReceiverFromMongodbForEtc(profileId);
         log.info("신고.문의.게시글 댓글 알림 responseList.isEmpty() : {}", responseList.isEmpty());
 
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
     @GetMapping("/compter-chat")
-    public ResponseEntity<List<NotificationResponseForCompterChat>> getMessageListByReceiverFromMongodbForCompterChat() {
+    public ResponseEntity<List<NotificationResponseForCompterChat>> getMessageListByReceiverFromMongodbForCompterChat(@CookieValue("JSESSIONID") String sessionId) throws URISyntaxException {
 
         log.info("컴터챗 알림 리스트 Get 컨트롤러 접근");
-        List<NotificationResponseForCompterChat> responseList = notificationService.getMessageListByReceiverFromMongodbForCompterChat(notificationService.authorizedProfileId());
+        log.info("auth 확인 접근");
+        LinkedHashMap<String, String> profile = notificationService.authorizedProfileId(sessionId);
+        String profileId = profile.get("profileId");
+
+        List<NotificationResponseForCompterChat> responseList = notificationService.getMessageListByReceiverFromMongodbForCompterChat(profileId);
         log.info("컴터챗 알림 responseList.isEmpty() : {}", responseList.isEmpty());
 
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
