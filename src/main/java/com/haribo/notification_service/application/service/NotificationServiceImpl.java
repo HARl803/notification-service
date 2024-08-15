@@ -1,6 +1,5 @@
 package com.haribo.notification_service.application.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haribo.notification_service.application.dto.MessageDtoWithLink;
 import com.haribo.notification_service.application.dto.MessageDtoWithMatchingId;
 import com.haribo.notification_service.domain.MessageForCompterChat;
