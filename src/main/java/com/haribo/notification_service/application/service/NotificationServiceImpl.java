@@ -1,6 +1,5 @@
 package com.haribo.notification_service.application.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haribo.notification_service.application.dto.MessageDtoWithLink;
 import com.haribo.notification_service.application.dto.MessageDtoWithMatchingId;
@@ -45,7 +44,6 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final ProfileMemberRepository profileMemberRepository;
     private final MongoTemplate mongoTemplate;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${path.to.auth}")
     private String PATH_TO_AUTH;
